@@ -1,7 +1,8 @@
-import express from 'express'
+import express from "express";
+import MovieController from "./movie.controller.js";
 
-const router = express.Router() // get access to express router
+const router = express.Router(); // get access to express router
 
-router.route('/').get((req, res) => res.send('hello world'))
+router.route("/").get(MovieController.apiGetMovies);
 
-export default router
+export default router;
