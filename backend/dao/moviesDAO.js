@@ -27,8 +27,6 @@ export default class MoviesDAO {
       }
     }
 
-    console.log(filters);
-
     let cursor;
     try {
       cursor = await movies
