@@ -22,7 +22,6 @@ const MoviesList = (props) => {
   const retrieveMovies = () => {
     MovieDataService.getAll()
       .then((response) => {
-        console.log(response.data);
         setMovies(response.data.movies);
       })
       .catch((e) => {
@@ -33,7 +32,6 @@ const MoviesList = (props) => {
   const retrieveRatings = () => {
     MovieDataService.getRatings()
       .then((response) => {
-        console.log(response.data);
         // start with "All ratings" if user doesn't specify any ratings
         setRatings(["All Ratings"].concat(response.data));
       })
@@ -52,6 +50,28 @@ const MoviesList = (props) => {
     setSearchRating(searchRating);
   };
 
+  const find = (query, by) => {
+    MovieDataService.find(query, by)
+      .then((response) => {
+        setMovies(response.data.movies);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const findByTitle = () => {
+    find(searchTitle, "title");
+  };
+
+  const findByRating = () => {
+    if (searchRating === "All Ratings") {
+      retrieveMovies();
+    } else {
+      find(searchRating, "rated");
+    }
+  };
+
   return (
     <div className="App">
       <Container>
@@ -66,11 +86,7 @@ const MoviesList = (props) => {
                   onChange={onChangeSearchTitle}
                 />
               </Form.Group>
-              <Button
-                variant="primary"
-                type="button"
-                //   onClick={findByTitle}
-              >
+              <Button variant="primary" type="button" onClick={findByTitle}>
                 Search
               </Button>
             </Col>
@@ -82,11 +98,7 @@ const MoviesList = (props) => {
                   })}
                 </Form.Control>
               </Form.Group>
-              <Button
-                variant="primary"
-                type="button"
-                //   onClick={findByRating}
-              >
+              <Button variant="primary" type="button" onClick={findByRating}>
                 Search
               </Button>
             </Col>

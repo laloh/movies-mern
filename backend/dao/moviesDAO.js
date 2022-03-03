@@ -8,7 +8,6 @@ export default class MoviesDAO {
       return;
     }
     try {
-      console.log(process.env.MOVIEREVIEWS_NS);
       movies = await conn.db(process.env.MOVIEREVIEWS_NS).collection("movies");
     } catch (e) {
       console.error(`unable to connect in MoviesDAO: ${e}`);
