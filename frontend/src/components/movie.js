@@ -8,6 +8,7 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 import Media from "react-bootstrap/Media";
+import moment from "moment";
 
 const Movie = (props) => {
   const [movie, setMovie] = useState({
@@ -30,6 +31,22 @@ const Movie = (props) => {
     getMovie(props.match.params.id);
   }, [props.match.params.id]);
 
+  const deleteReview = (reviewId, index) => {
+    MovieDataService.deleteReview(reviewId, props.user.id)
+      .then((response) => {
+        setMovie((prevState) => {
+          prevState.reviews.splice(index, 1);
+          console.log(prevState);
+          return {
+            ...prevState,
+          };
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   return (
     <div>
       <Container>
@@ -42,7 +59,7 @@ const Movie = (props) => {
               <Card.Header as="h5">{movie.title}</Card.Header>
               <Card.Body>
                 <Card.Text>{movie.plot}</Card.Text>
-                {props.user && (
+                {true && (
                   <Link to={"/movies/" + props.match.params.id + "/review"}>
                     Add Review
                   </Link>
@@ -54,7 +71,10 @@ const Movie = (props) => {
               return (
                 <Media key={index}>
                   <Media.Body>
-                    <h5>{review.name + " reviewed on " + review.date}</h5>
+                    <h5>
+                      {review.name + " reviewed on " + review.date}
+                      {moment(review.data).format("Do MMMM YYYY")}
+                    </h5>
                     <p>{review.review}</p>
                     {props.user && props.user.id === review.user_id && (
                       <Row>
@@ -70,7 +90,12 @@ const Movie = (props) => {
                           </Link>
                         </Col>
                         <Col>
-                          <Button variant="link">Delete</Button>
+                          <Button
+                            variant="link"
+                            onClick={() => deleteReview(review._id, index)}
+                          >
+                            Delete
+                          </Button>
                         </Col>
                       </Row>
                     )}
